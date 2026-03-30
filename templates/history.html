@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BeeBot - History</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    height: 100vh;
+    background: #fafbfc;
+    color: #111827;
+}
+
+/* SIDEBAR (Matches index.html) */
+#sidebar {
+    width: 260px;
+    background: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #f3f4f6;
+}
+.logo { font-size: 20px; font-weight: 700; color: #2b1c50; display: flex; align-items: center; gap: 8px; }
+.logo span { color: #5a67d8; font-size: 24px; }
+.search-container {
+    display: flex; align-items: center; background: #f9fafb; padding: 8px 12px;
+    border-radius: 10px; border: 1px solid #e5e7eb;
+}
+.search-container input { border: none; background: transparent; outline: none; width: 100%; margin-left: 8px; }
+.menu { display: flex; flex-direction: column; gap: 4px; }
+.menu div {
+    padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; color: #6b7280; font-weight: 500;
+    display: flex; align-items: center; gap: 12px; transition: 0.2s;
+}
+.menu div:hover { background: #f3f4f6; color: #111827; }
+.menu .active { background: #f3f4f6; color: #111827; }
+
+/* MAIN AREA */
+#main {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* TITLE & HEADER */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+h1 { font-size: 28px; font-weight: 600; margin: 0; }
+
+/* BUTTONS */
+button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: 0.2s;
+}
+button:hover { background: #f9fafb; border-color: #d1d5db; }
+button.danger { color: #ef4444; }
+button.danger:hover { background: #fef2f2; border-color: #fecaca; }
+
+/* CHAT LIST CARDS */
+.chat-box {
+    background: #ffffff;
+    padding: 18px 20px;
+    margin: 12px 0;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+    font-weight: 500;
+    color: #374151;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.chat-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+}
+
+/* MESSAGE VIEW */
+.message {
+    margin: 10px 0;
+    padding: 14px 18px;
+    border-radius: 16px;
+    max-width: 75%;
+    line-height: 1.5;
+    font-size: 15px;
+}
+.user { background: #f3f4f6; color: #111827; margin-left: auto; border-bottom-right-radius: 4px; }
+.bot { background: #ffffff; border: 1px solid #e5e7eb; color: #111827; border-bottom-left-radius: 4px; }
+
+/* MOBILE */
+@media(max-width: 768px){ #sidebar { display: none; } #main { padding: 20px; } }
+</style>
+</head>
+
+<body>
+
+<div id="sidebar">
+    <div class="logo"><span>❖</span> BeeBot</div>
+    
+    <div class="search-container">
+        <span>🔍</span>
+        <input placeholder="Search">
+    </div>
+
+    <div class="menu">
+        <div onclick="window.location='/'">🏠 Home</div>
+        <div>🧭 Explore</div>
+        <div>📚 Library</div>
+        <div class="active">🕒 History</div>
+    </div>
+</div>
+
+<div id="main">
+
+    <div class="header-row">
+        <h1>Chat History</h1>
+        <div>
+            <button onclick="window.location='/'">⬅ Back</button>
+            <button class="danger" onclick="clearAll()">🗑 Clear All</button>
+        </div>
+    </div>
+
+    <div id="container">
+        </div>
+
+</div>
+
+<script>
+/* LOAD ALL CHATS */
+function loadHistory(){
+    fetch("/all_chats")
+    .then(r=>r.json())
+    .then(data=>{
+        let c = document.getElementById("container");
+        c.innerHTML = "";
+
+        let keys = Object.keys(data);
+        if(keys.length === 0) {
+            c.innerHTML = "<p style='color:#6b7280;'>No history available.</p>";
+            return;
+        }
+
+        keys.forEach(id=>{
+            let div = document.createElement("div");
+            div.className = "chat-box";
+            // Grab the first message as a title preview
+            let title = data[id][0]?.content || "New Chat";
+            if(title.length > 80) title = title.substring(0, 80) + "...";
+            
+            div.innerText = "💬 " + title;
+            div.onclick = () => showChat(data[id]);
+            c.appendChild(div);
+        });
+    });
+}
+
+/* SHOW FULL CHAT */
+function showChat(messages){
+    let c = document.getElementById("container");
+    c.innerHTML = "";
+
+    messages.forEach(m=>{
+        let div = document.createElement("div");
+        div.className = "message " + (m.role==="user"?"user":"bot");
+        div.innerText = (m.role==="user" ? "You: " : "AI: ") + m.content;
+        c.appendChild(div);
+    });
+}
+
+/* CLEAR */
+function clearAll(){
+    if(confirm("Are you sure you want to clear all history?")){
+        fetch("/clear_all",{method:"POST"})
+        .then(loadHistory);
+    }
+}
+
+loadHistory();
+</script>
+
+</body>
+</html>
