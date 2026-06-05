@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BeeBot - History</title>
+<title>CHITTI AI - History</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -108,14 +108,39 @@ button.danger:hover { background: #fef2f2; border-color: #fecaca; }
 .bot { background: #ffffff; border: 1px solid #e5e7eb; color: #111827; border-bottom-left-radius: 4px; }
 
 /* MOBILE */
-@media(max-width: 768px){ #sidebar { display: none; } #main { padding: 20px; } }
+@media(max-width: 768px){
+    #sidebar { display: none; }
+    #main {
+        padding: 20px;
+        width: 100%;
+    }
+    .header-row {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .header-row > div {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .message {
+        max-width: 90%;
+    }
+    .message p { margin: 4px 0; }
+    .message p:first-child { margin-top: 0; }
+    .message p:last-child { margin-bottom: 0; }
+    .message ul, .message ol { margin: 6px 0; padding-left: 20px; }
+    .message li { margin-bottom: 3px; }
+}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
 
 <div id="sidebar">
-    <div class="logo"><span>❖</span> BeeBot</div>
+    <div class="logo"><span>❖</span> CHITTI AI</div>
     
     <div class="search-container">
         <span>🔍</span>
@@ -124,8 +149,7 @@ button.danger:hover { background: #fef2f2; border-color: #fecaca; }
 
     <div class="menu">
         <div onclick="window.location='/'">🏠 Home</div>
-        <div>🧭 Explore</div>
-        <div>📚 Library</div>
+        
         <div class="active">🕒 History</div>
     </div>
 </div>
@@ -148,7 +172,7 @@ button.danger:hover { background: #fef2f2; border-color: #fecaca; }
 <script>
 /* LOAD ALL CHATS */
 function loadHistory(){
-    fetch("/all_chats")
+    fetch("/all_chats", { credentials: 'same-origin' })
     .then(r=>r.json())
     .then(data=>{
         let c = document.getElementById("container");
@@ -182,7 +206,12 @@ function showChat(messages){
     messages.forEach(m=>{
         let div = document.createElement("div");
         div.className = "message " + (m.role==="user"?"user":"bot");
-        div.innerText = (m.role==="user" ? "You: " : "AI: ") + m.content;
+        const prefix = m.role === "user" ? "<strong>You:</strong> " : "<strong>AI:</strong> ";
+        if (typeof marked !== 'undefined') {
+            div.innerHTML = prefix + marked.parse(m.content);
+        } else {
+            div.innerText = (m.role==="user" ? "You: " : "AI: ") + m.content;
+        }
         c.appendChild(div);
     });
 }
@@ -190,7 +219,7 @@ function showChat(messages){
 /* CLEAR */
 function clearAll(){
     if(confirm("Are you sure you want to clear all history?")){
-        fetch("/clear_all",{method:"POST"})
+        fetch("/clear_all",{method:"POST", credentials: 'same-origin'})
         .then(loadHistory);
     }
 }

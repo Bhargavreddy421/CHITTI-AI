@@ -10,44 +10,117 @@
 
 * { box-sizing: border-box; }
 
+/* ── THEME VARIABLES ── */
+:root {
+    --bg:          #fafbfc;
+    --surface:     #ffffff;
+    --surface2:    #f9fafb;
+    --border:      #e5e7eb;
+    --text:        #111827;
+    --text-muted:  #6b7280;
+    --text-muted2: #9ca3af;
+    --hover:       #f3f4f6;
+    --user-bubble: #f3f4f6;
+    --input-area:  #fafbfc;
+    --shadow:      rgba(0,0,0,0.04);
+    --sidebar-bg:  #ffffff;
+}
+body.dark {
+    --bg:          #0f1117;
+    --surface:     #1a1d27;
+    --surface2:    #1e2130;
+    --border:      #2d3148;
+    --text:        #e2e8f0;
+    --text-muted:  #94a3b8;
+    --text-muted2: #64748b;
+    --hover:       #252840;
+    --user-bubble: #252840;
+    --input-area:  #0f1117;
+    --shadow:      rgba(0,0,0,0.3);
+    --sidebar-bg:  #13151f;
+}
+
 body {
     margin: 0;
     font-family: 'Inter', system-ui, sans-serif;
     display: flex;
     height: 100vh;
-    background: #fafbfc;
-    color: #111827;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* SIDEBAR */
 #sidebar {
     width: 260px;
-    background: #ffffff;
+    background: var(--sidebar-bg);
     padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    border-right: 1px solid #f3f4f6;
+    border-right: 1px solid var(--border);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 .logo {
     font-size: 20px;
     font-weight: 700;
-    color: #2b1c50;
+    color: #5a67d8;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 .logo span { color: #5a67d8; font-size: 24px; }
 
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 14px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: all 0.25s ease;
+    user-select: none;
+}
+.theme-toggle:hover { background: var(--hover); color: var(--text); }
+.theme-toggle-track {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: #d1d5db;
+    position: relative;
+    transition: background 0.3s ease;
+    flex-shrink: 0;
+}
+body.dark .theme-toggle-track { background: #6366f1; }
+.theme-toggle-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+body.dark .theme-toggle-thumb { transform: translateX(18px); }
+
 /* Search Box */
 .search-container {
     display: flex;
     align-items: center;
-    background: #f9fafb;
+    background: var(--surface2);
     padding: 8px 12px;
     border-radius: 10px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 .search-container input {
     border: none;
@@ -56,34 +129,36 @@ body {
     width: 100%;
     margin-left: 8px;
     font-size: 14px;
-    color: #4b5563;
+    color: var(--text-muted);
 }
-.search-container span { color: #9ca3af; font-size: 14px; }
+.search-container span { color: var(--text-muted2); font-size: 14px; }
 
 /* Menu */
 .menu {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
 }
 .menu div {
     padding: 10px 12px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: #6b7280;
+    color: var(--text-muted);
     font-weight: 500;
     display: flex;
     align-items: center;
     gap: 12px;
     transition: 0.2s;
 }
-.menu div:hover { background: #f3f4f6; color: #111827; }
-.menu .active { background: #f3f4f6; color: #111827; }
+.menu div:hover { background: var(--hover); color: var(--text); }
+.menu .active { background: var(--hover); color: var(--text); }
 
 /* MAIN AREA */
 #main {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -100,17 +175,40 @@ body {
     width: 100%;
 }
 .model-selector {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
+    background: var(--surface);
+    border: 1px solid var(--border);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 14px;
     font-weight: 600;
+    color: var(--text);
     display: flex;
     align-items: center;
     gap: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+    box-shadow: 0 2px 10px var(--shadow);
     cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Top-bar icon theme button (mobile) */
+.theme-btn-top {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    font-size: 17px;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+.theme-btn-top:hover { background: var(--hover); transform: scale(1.1); }
+
+.mobile-nav {
+    display: none;
 }
 
 /* CENTER HOME SCREEN */
@@ -142,7 +240,8 @@ body {
     font-size: 36px;
     font-weight: 600;
     margin: 5px 0;
-    color: #1f2937;
+    color: var(--text);
+    transition: color 0.3s ease;
 }
 .highlight {
     background: linear-gradient(90deg, #4f46e5, #9333ea);
@@ -155,11 +254,12 @@ body {
     margin-top: 40px;
     width: 650px;
     max-width: 90%;
-    background: #ffffff;
+    background: var(--surface);
     border-radius: 16px;
     padding: 16px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 40px var(--shadow);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 .input-row {
     display: flex;
@@ -173,10 +273,10 @@ body {
     outline: none;
     background: transparent;
     font-size: 16px;
-    color: #111827;
+    color: var(--text);
     padding: 10px 0;
 }
-.input-row input::placeholder { color: #9ca3af; }
+.input-row input::placeholder { color: var(--text-muted2); }
 
 /* Action Pills */
 .action-pills {
@@ -198,6 +298,23 @@ body {
     transition: 0.2s;
 }
 .action-pills div:hover { background: #f3f4f6; }
+.action-pills > div { display: none; }
+.attach-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.attach-pill:hover { background: var(--hover); }
+.hidden-file-input { display: none; }
 
 /* CHAT AREA */
 #chat-container {
@@ -223,16 +340,18 @@ body {
     font-size: 15px;
 }
 .user {
-    background: #f3f4f6;
-    color: #111827;
+    background: var(--user-bubble);
+    color: var(--text);
     align-self: flex-end;
     border-bottom-right-radius: 4px;
     margin-left: auto;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 .bot {
     background: transparent;
-    color: #111827;
+    color: var(--text);
     border-bottom-left-radius: 4px;
+    transition: color 0.3s ease;
 }
 
 /* CHAT MODE INPUT AREA */
@@ -240,7 +359,8 @@ body {
     width: 100%;
     max-width: 800px;
     padding: 20px;
-    background: #fafbfc;
+    background: var(--input-area);
+    transition: background 0.3s ease;
 }
 #inputArea .input-container {
     margin-top: 0;
@@ -248,12 +368,15 @@ body {
     padding: 10px 16px;
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 #inputArea input {
     flex: 1;
     border: none;
     outline: none;
     font-size: 15px;
+    color: var(--text);
+    background: transparent;
 }
 #inputArea button {
     padding: 8px 16px;
@@ -268,17 +391,65 @@ body {
     color: white;
 }
 #stopBtn {
-    background: #ef4444; /* Red color for stop */
+    background: #ef4444;
     color: white;
-    display: none; /* Hidden by default */
+    display: none;
+}
+.chat-attach-btn {
+    background: var(--surface2);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    transition: background 0.3s ease;
 }
 
 /* MOBILE */
 @media(max-width: 768px){
     #sidebar { display: none; }
-    .top-bar { padding: 15px; }
+    .theme-btn-top { display: flex; }
+    .top-bar {
+        padding: 15px;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+    .mobile-nav {
+        display: flex;
+        gap: 8px;
+    }
+    .mobile-nav button {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 18px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 10px var(--shadow);
+        transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    #home {
+        padding: 80px 16px 20px;
+    }
+    .model-selector {
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+    .center-box h1 {
+        font-size: 28px;
+    }
+    .msg {
+        max-width: 90%;
+    }
+    .msg p { margin: 4px 0; }
+    .msg p:first-child { margin-top: 0; }
+    .msg p:last-child { margin-bottom: 0; }
+    .msg ul, .msg ol { margin: 6px 0; padding-left: 20px; }
+    .msg li { margin-bottom: 3px; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -292,9 +463,18 @@ body {
         <span>⌘</span>
     </div>
 
+    <!-- 🌙 Theme Toggle -->
+    <div class="theme-toggle" id="sidebarThemeToggle" onclick="toggleTheme()" title="Toggle dark / light mode">
+        <span id="themeLabel">🌙 Dark Mode</span>
+        <div class="theme-toggle-track">
+            <div class="theme-toggle-thumb"></div>
+        </div>
+    </div>
+
     <div class="menu">
         <div class="active" onclick="goHome()">🏠 Home</div>
         <div onclick="window.location='/history_page'">🕒 History</div>
+        <div onclick="window.location='/logout'" style="margin-top:auto; color:#ef4444;">🚪 Logout</div>
     </div>
 </div>
 
@@ -302,12 +482,19 @@ body {
 
     <div class="top-bar">
         <div class="model-selector"><span>❖</span> CHITTI <span>⌄</span></div>
+        <div class="mobile-nav">
+            <button type="button" onclick="goHome()">Home</button>
+            <button type="button" onclick="window.location='/history_page'">History</button>
+            <button type="button" onclick="window.location='/logout'" style="color:#ef4444;">Logout</button>
+        </div>
+        <!-- Mobile theme icon -->
+        <button type="button" class="theme-btn-top" id="mobileThemeBtn" onclick="toggleTheme()" title="Toggle dark / light mode">🌙</button>
     </div>
 
     <div id="home">
         <div class="orb"></div>
         <div class="center-box">
-            <h1>Good Morning, Judha</h1>
+            <h1>Hello, <span class="highlight">{{ username }}</span> 👋</h1>
             <h1>How Can I <span class="highlight">Assist You Today?</span></h1>
         </div>
 
@@ -318,6 +505,7 @@ body {
                        onkeydown="if(event.key==='Enter') startChat()">
             </div>
             <div class="action-pills">
+                <button type="button" class="attach-pill" onclick="openPdfPicker()">Attach PDF</button>
                 <div>📎 Attach</div>
             </div>
         </div>
@@ -328,8 +516,9 @@ body {
 
         <div id="inputArea">
             <div class="input-container" style="border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+                <button type="button" class="chat-attach-btn" onclick="openPdfPicker()">PDF</button>
                 <input id="msg" placeholder="Message CHITTI...">
-                <button id="sendBtn" onclick="send()">Send</button>
+                <button id="sendBtn" type="button">Send</button>
                 <button id="stopBtn" onclick="stopChat()">Stop</button>
             </div>
         </div>
@@ -337,18 +526,24 @@ body {
 
 </div>
 
+<input id="pdfInput" class="hidden-file-input" type="file" accept="application/pdf" onchange="uploadPdf(this.files[0])">
+
 <script>
 let currentChat = null;
 let chatDiv = document.getElementById("chat");
 let abortController = null; // Used to cancel the fetch request
+
+function showChatMode(){
+    document.getElementById("home").style.display = "none";
+    document.getElementById("chat-container").style.display = "flex";
+}
 
 /* START CHAT FROM HOME */
 function startChat(){
     let text = document.getElementById("homeInput").value.trim();
     if(!text) return;
 
-    document.getElementById("home").style.display = "none";
-    document.getElementById("chat-container").style.display = "flex";
+    showChatMode();
 
     createChat(() => {
         send(text);
@@ -359,20 +554,100 @@ function startChat(){
 function addMessage(text, cls){
     let div = document.createElement("div");
     div.className = "msg " + cls;
-    div.innerText = text;
+    if (typeof marked !== 'undefined') {
+        div.innerHTML = marked.parse(text);
+    } else {
+        div.innerText = text;
+    }
     chatDiv.appendChild(div);
     chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
 /* CREATE CHAT */
 function createChat(callback){
-    fetch("/new_chat",{method:"POST"})
+    fetch("/new_chat",{method:"POST", credentials: 'same-origin'})
     .then(r=>r.json())
     .then(d=>{
+        console.log("new_chat response:", d);
         currentChat = d.chat_id;
         chatDiv.innerHTML = "";
         if(callback) callback();
     });
+}
+
+function openPdfPicker(){
+    document.getElementById("pdfInput").click();
+}
+
+function uploadPdf(file){
+    if(!file) return;
+
+    if(!file.name.toLowerCase().endsWith(".pdf")){
+        alert("Please select a PDF file.");
+        document.getElementById("pdfInput").value = "";
+        return;
+    }
+
+    showChatMode();
+
+    const startUpload = () => {
+        addMessage("Attached PDF: " + file.name, "user");
+
+        let bot = document.createElement("div");
+        bot.className = "msg bot";
+        bot.innerText = "Extracting PDF and preparing explanation...";
+        chatDiv.appendChild(bot);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+
+        setButtonState(true);
+
+        let formData = new FormData();
+        formData.append("pdf", file);
+        if(currentChat) {
+            formData.append("chat_id", currentChat);
+        }
+
+        console.log("upload_pdf request:", { fileName: file.name, chat_id: currentChat });
+        fetch("/upload_pdf", {
+            method: "POST",
+            credentials: 'same-origin',
+            body: formData
+        })
+        .then(async response => {
+            console.log("upload_pdf response status:", response.status, response.statusText);
+            let data = null;
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                data = await response.json();
+                console.log("upload_pdf json:", data);
+            }
+            if(!response.ok) {
+                throw new Error((data && data.reply) || response.statusText || "PDF upload failed.");
+            }
+            return data;
+        })
+        .then(data => {
+            currentChat = data.chat_id || currentChat;
+            if (typeof marked !== 'undefined') {
+                bot.innerHTML = marked.parse(data.reply);
+            } else {
+                bot.innerText = data.reply;
+            }
+        })
+        .catch(err => {
+            bot.innerText = "Error: " + err.message;
+        })
+        .finally(() => {
+            setButtonState(false);
+            document.getElementById("pdfInput").value = "";
+        });
+    };
+
+    if(!currentChat) {
+        createChat(startUpload);
+    } else {
+        startUpload();
+    }
 }
 
 /* TOGGLE BUTTONS */
@@ -393,7 +668,16 @@ function send(customMsg=null){
     let input = document.getElementById("msg");
     let msg = customMsg || input.value.trim();
 
-    if(!msg || !currentChat) return;
+    if(!msg) return;
+
+    // If no chat exists yet, create one then send the message.
+    if(!currentChat) {
+        createChat(() => {
+            // After chat is created, re-call send with the same message
+            send(customMsg);
+        });
+        return;
+    }
 
     addMessage(msg,"user");
     input.value = "";
@@ -408,18 +692,42 @@ function send(customMsg=null){
     setButtonState(true);
     abortController = new AbortController();
 
+    console.log("sending /chat request:", { message: msg, chat_id: currentChat });
     fetch("/chat",{
         method:"POST",
+        credentials: 'same-origin',
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({message:msg,chat_id:currentChat}),
         signal: abortController.signal // Attach the abort signal
     })
-    .then(r=>r.json())
+    .then(async r=>{
+        console.log("/chat response status:", r.status, r.statusText);
+        let data = null;
+        const contentType = r.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+            try {
+                data = await r.json();
+                console.log('/chat json:', data);
+            } catch(e) {
+                console.error('Failed to parse /chat json', e);
+            }
+        }
+        if(!r.ok) {
+            return { reply: "Error: " + ((data && data.reply) || r.statusText || "AI request failed.") };
+        }
+        return data;
+    })
     .then(d=>{
-        bot.innerText = d.reply;
+        currentChat = d.chat_id || currentChat;
+        if (typeof marked !== 'undefined') {
+            bot.innerHTML = marked.parse(d.reply);
+        } else {
+            bot.innerText = d.reply;
+        }
         setButtonState(false);
     })
     .catch((err)=>{
+        console.error('fetch /chat error:', err);
         if(err.name === 'AbortError') {
             bot.innerText = "🛑 Generation stopped by user.";
         } else {
@@ -429,22 +737,83 @@ function send(customMsg=null){
     });
 }
 
+/* DARK / LIGHT MODE TOGGLE */
+function applyTheme(isDark) {
+    document.body.classList.toggle('dark', isDark);
+
+    const label     = document.getElementById('themeLabel');
+    const mobileBtn = document.getElementById('mobileThemeBtn');
+
+    if (isDark) {
+        if (label)     label.textContent  = '☀️ Light Mode';
+        if (mobileBtn) mobileBtn.textContent = '☀️';
+    } else {
+        if (label)     label.textContent  = '🌙 Dark Mode';
+        if (mobileBtn) mobileBtn.textContent = '🌙';
+    }
+}
+
+function toggleTheme() {
+    const isDark = !document.body.classList.contains('dark');
+    localStorage.setItem('chittiTheme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
+}
+
+// Apply saved preference immediately (avoids flash)
+(function() {
+    const saved = localStorage.getItem('chittiTheme');
+    applyTheme(saved === 'dark');
+})();
+
 /* ENTER KEY FOR CHAT MODE */
-document.getElementById("msg").addEventListener("keydown", e=>{
-    if(e.key==="Enter"){
-        e.preventDefault();
-        // Only allow sending if we aren't currently generating
-        if(document.getElementById("sendBtn").style.display !== "none") {
-            send();
+/* ENTER KEY FOR CHAT MODE */
+;(function(){
+    const msgEl = document.getElementById("msg");
+    if(!msgEl) return;
+
+    function handleEnterKey(e){
+        // Normalize keys (some keyboards/IME may give different values)
+        const key = e.key || e.code || '';
+        if(key === 'Enter' || key === 'NumpadEnter'){
+            e.preventDefault();
+
+            const sendBtn = document.getElementById('sendBtn');
+            let display = '';
+            try {
+                display = window.getComputedStyle ? window.getComputedStyle(sendBtn).display : sendBtn.style.display;
+            } catch (err) {
+                display = sendBtn ? sendBtn.style.display : '';
+            }
+
+            console.log('Enter pressed in message box, sendBtn display=', display, 'currentChat=', currentChat);
+
+            // Only send when send button is visible (not generating)
+            if(display !== 'none'){
+                send();
+            }
         }
     }
-});
 
-/* BACK TO HOME */
-function goHome(){
-    location.reload();
-}
+    // Listen for keydown on the input (preferred) and also keypress as fallback
+    msgEl.addEventListener('keydown', handleEnterKey);
+    msgEl.addEventListener('keypress', function(e){ if(e.key === 'Enter') { handleEnterKey(e); } });
+})();
+
+// Attach click handler to Send button (fallback) and log clicks
+(function(){
+    const sendBtn = document.getElementById('sendBtn');
+    if(!sendBtn) return;
+    try{ sendBtn.type = 'button'; } catch(e){}
+    sendBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        try{
+            console.log('sendBtn clicked, sendBtn display=', window.getComputedStyle ? window.getComputedStyle(sendBtn).display : sendBtn.style.display, 'currentChat=', window.currentChat);
+        } catch(err) { console.log('sendBtn clicked'); }
+        const display = window.getComputedStyle ? window.getComputedStyle(sendBtn).display : sendBtn.style.display;
+        if(display !== 'none') send();
+    });
+})();
+
 </script>
-
 </body>
 </html>

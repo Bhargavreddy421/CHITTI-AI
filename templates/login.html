@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHITTI AI – Login</title>
+<meta name="description" content="Sign in or create an account to start chatting with CHITTI AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --accent: #a855f7;
+  /* Light theme (default) - match index theme */
+  --bg: #fafbfc;
+  --card-bg: rgba(255,255,255,0.88);
+  --border: #e5e7eb;
+  --text: #111827;
+  --muted: #6b7280;
+  --error: #f87171;
+  --success: #34d399;
+  --blob-opacity: 0.12;
+}
+
+/* Dark mode overrides */
+body.dark {
+  --bg: #0d0d1a;
+  --card-bg: rgba(15,15,30,0.75);
+  --border: rgba(255,255,255,0.1);
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --blob-opacity: 0.25;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.35s ease;
+}
+
+/* Animated background blobs */
+.bg-blob {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: var(--blob-opacity);
+  animation: blobFloat 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.35s ease;
+}
+.blob1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, #6366f1, #4f46e5);
+  top: -200px; left: -150px;
+  animation-delay: 0s;
+}
+.blob2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, #a855f7, #7c3aed);
+  bottom: -150px; right: -100px;
+  animation-delay: 3s;
+}
+.blob3 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, #06b6d4, #0891b2);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 6s;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(15px, -20px) scale(1.05); }
+  66%       { transform: translate(-10px, 15px) scale(0.97); }
+}
+
+/* Grid pattern overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Auth Card */
+.auth-card {
+  position: relative;
+  z-index: 10;
+  width: 420px;
+  max-width: 95vw;
+  background: var(--card-bg);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow: 0 20px 60px rgba(99,102,241,0.15), 0 4px 20px rgba(0,0,0,0.06);
+  animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+body.dark .auth-card {
+  box-shadow: 0 25px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Logo */
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.logo-orb {
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #c4b5fd, #818cf8);
+  box-shadow: 0 6px 20px rgba(129,140,248,0.5);
+  animation: float 4s ease-in-out infinite;
+}
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.logo-text {
+  font-size: 22px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #c4b5fd, #818cf8, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  background: rgba(99,102,241,0.07);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 28px;
+  border: 1px solid var(--border);
+  transition: border-color 0.35s ease;
+}
+.tab-btn {
+  flex: 1;
+  padding: 9px;
+  background: transparent;
+  border: none;
+  border-radius: 9px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+}
+
+/* Form sections */
+.form-section { display: none; }
+.form-section.active { display: block; }
+
+/* Flash messages */
+.flash-msg {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.flash-error  { background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.3); color: var(--error); }
+.flash-success{ background: rgba(52,211,153,0.12);  border: 1px solid rgba(52,211,153,0.3);  color: var(--success); }
+
+/* Form fields */
+.field {
+  margin-bottom: 18px;
+}
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 7px;
+  letter-spacing: 0.3px;
+}
+.field-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.field-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted);
+  font-size: 15px;
+  pointer-events: none;
+}
+.field input {
+  width: 100%;
+  background: rgba(255,255,255,0.8);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px 12px 40px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+body.dark .field input { background: rgba(99,102,241,0.05); }
+.field input:focus {
+  border-color: var(--primary);
+  background: rgba(99,102,241,0.08);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+}
+.field input::placeholder { color: rgba(107,114,128,0.6); }
+body.dark .field input::placeholder { color: rgba(107,114,128,0.5); }
+
+/* Toggle password visibility */
+.eye-btn {
+  position: absolute;
+  right: 13px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 15px;
+  padding: 2px;
+  transition: color 0.2s;
+}
+.eye-btn:hover { color: var(--text); }
+
+/* Submit button */
+.submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 18px rgba(99,102,241,0.4);
+  position: relative;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.submit-btn:hover::before { opacity: 1; }
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.5);
+}
+.submit-btn:active { transform: translateY(0); }
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Divider */
+.divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  margin: 22px 0 0;
+}
+.divider a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+.divider a:hover { color: var(--accent); text-decoration: underline; }
+
+/* Password strength bar */
+.strength-bar-wrap {
+  margin-top: 7px;
+  display: none;
+}
+.strength-bar-wrap.visible { display: block; }
+.strength-bar-bg {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.strength-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+.strength-label {
+  font-size: 11px;
+  margin-top: 4px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* ── Floating theme toggle button ── */
+.theme-fab {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: pointer;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, background 0.35s;
+  user-select: none;
+}
+.theme-fab:hover {
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 6px 24px rgba(99,102,241,0.35);
+}
+</style>
+</head>
+<body>
+
+<!-- Floating theme toggle -->
+<button class="theme-fab" id="themeFab" onclick="toggleTheme()" title="Toggle dark / light mode">🌙</button>
+
+<!-- Background blobs -->
+<div class="bg-blob blob1"></div>
+<div class="bg-blob blob2"></div>
+<div class="bg-blob blob3"></div>
+
+<div class="auth-card">
+
+  <!-- Logo -->
+  <div class="logo-row">
+    <div class="logo-orb"></div>
+    <div class="logo-text">CHITTI AI</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" id="loginTabBtn" onclick="switchTab('login')">Sign In</button>
+    <button class="tab-btn" id="registerTabBtn" onclick="switchTab('register')">Create Account</button>
+  </div>
+
+  <!-- Flash message area (server-side) -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="flash-msg flash-{{ category }}">
+          {{ '✓' if category == 'success' else '⚠' }} {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <!-- Client-side alert -->
+  <div id="alertBox" style="display:none;" class="flash-msg flash-error">
+    <span id="alertIcon">⚠</span>
+    <span id="alertText"></span>
+  </div>
+
+  <!-- ─── LOGIN FORM ─── -->
+  <div class="form-section active" id="loginSection">
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="field">
+        <label for="login-username">Username</label>
+        <div class="field-wrap">
+          <span class="field-icon">👤</span>
+          <input id="login-username" name="username" type="text" placeholder="Enter your username" autocomplete="username" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="login-password">Password</label>
+        <div class="field-wrap">
+          <span class="field-icon">🔑</span>
+          <input id="login-password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+          <button type="button" class="eye-btn" onclick="togglePwd('login-password', this)">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="loginBtn">Sign In</button>
+    </form>
+
+    <div class="divider">
+      Don't have an account? <a href="#" onclick="switchTab('register')">Create one</a>
+    </div>
+  </div>
+
+  <!-- ─── REGISTER FORM ─── -->
+  <div class="form-section" id="registerSection">
+    <form id="registerForm" onsubmit="handleRegister(event)">
+      <div class="field">
+        <label for="reg-username">Username</label>
+        <div class="field-wrap">
+          <span class="field-icon">👤</span>
+          <input id="reg-username" name="username" type="text" placeholder="Choose a username" autocomplete="username" required minlength="3">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="reg-password">Password</label>
+        <div class="field-wrap">
+          <span class="field-icon">🔑</span>
+          <input id="reg-password" name="password" type="password" placeholder="Create a password" autocomplete="new-password" required minlength="6" oninput="checkStrength(this.value)">
+          <button type="button" class="eye-btn" onclick="togglePwd('reg-password', this)">👁</button>
+        </div>
+        <div class="strength-bar-wrap" id="strengthWrap">
+          <div class="strength-bar-bg">
+            <div class="strength-bar-fill" id="strengthBar"></div>
+          </div>
+          <div class="strength-label" id="strengthLabel"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="reg-confirm">Confirm Password</label>
+        <div class="field-wrap">
+          <span class="field-icon">🔒</span>
+          <input id="reg-confirm" name="confirm" type="password" placeholder="Repeat your password" autocomplete="new-password" required>
+          <button type="button" class="eye-btn" onclick="togglePwd('reg-confirm', this)">👁</button>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="registerBtn">Create Account</button>
+    </form>
+
+    <div class="divider">
+      Already have an account? <a href="#" onclick="switchTab('login')">Sign in</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Tab switching ──
+function switchTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('loginSection').classList.toggle('active', isLogin);
+  document.getElementById('registerSection').classList.toggle('active', !isLogin);
+  document.getElementById('loginTabBtn').classList.toggle('active', isLogin);
+  document.getElementById('registerTabBtn').classList.toggle('active', !isLogin);
+  hideAlert();
+}
+
+// ── Alert helper ──
+function showAlert(msg, type = 'error') {
+  const box = document.getElementById('alertBox');
+  box.className = 'flash-msg flash-' + type;
+  document.getElementById('alertIcon').textContent = type === 'success' ? '✓' : '⚠';
+  document.getElementById('alertText').textContent = msg;
+  box.style.display = 'flex';
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideAlert() {
+  document.getElementById('alertBox').style.display = 'none';
+}
+
+// ── Toggle password visibility ──
+function togglePwd(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  const isHidden = inp.type === 'password';
+  inp.type = isHidden ? 'text' : 'password';
+  btn.textContent = isHidden ? '🙈' : '👁';
+}
+
+// ── Password strength ──
+function checkStrength(val) {
+  const wrap = document.getElementById('strengthWrap');
+  const bar  = document.getElementById('strengthBar');
+  const lbl  = document.getElementById('strengthLabel');
+
+  if (!val) { wrap.classList.remove('visible'); return; }
+  wrap.classList.add('visible');
+
+  let score = 0;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const levels = [
+    { pct: '20%', color: '#f87171', label: 'Very weak' },
+    { pct: '40%', color: '#fb923c', label: 'Weak' },
+    { pct: '65%', color: '#facc15', label: 'Moderate' },
+    { pct: '85%', color: '#4ade80', label: 'Strong' },
+    { pct: '100%', color: '#34d399', label: 'Very strong' },
+  ];
+  const lvl = levels[Math.min(score, 4)];
+  bar.style.width = lvl.pct;
+  bar.style.background = lvl.color;
+  lbl.style.color = lvl.color;
+  lbl.textContent = lvl.label;
+}
+
+// ── Login ──
+async function handleLogin(e) {
+  e.preventDefault();
+  hideAlert();
+  const btn = document.getElementById('loginBtn');
+  const username = document.getElementById('login-username').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  if (!username || !password) { showAlert('Please fill in all fields.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Signing in…';
+
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showAlert('Welcome back, ' + data.username + '! Redirecting…', 'success');
+      setTimeout(() => { window.location.href = '/'; }, 800);
+    } else {
+      showAlert(data.message || 'Invalid credentials. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = 'Sign In';
+    }
+  } catch (err) {
+    showAlert('Network error. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Sign In';
+  }
+}
+
+// ── Register ──
+async function handleRegister(e) {
+  e.preventDefault();
+  hideAlert();
+  const btn = document.getElementById('registerBtn');
+  const username = document.getElementById('reg-username').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const confirm  = document.getElementById('reg-confirm').value;
+
+  if (!username || !password || !confirm) { showAlert('Please fill in all fields.'); return; }
+  if (username.length < 3) { showAlert('Username must be at least 3 characters.'); return; }
+  if (password.length < 6) { showAlert('Password must be at least 6 characters.'); return; }
+  if (password !== confirm) { showAlert('Passwords do not match.'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Creating account…';
+
+  try {
+    const res = await fetch('/register', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      showAlert('Account created! Signing you in…', 'success');
+      setTimeout(() => { window.location.href = '/'; }, 900);
+    } else {
+      showAlert(data.message || 'Registration failed. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = 'Create Account';
+    }
+  } catch (err) {
+    showAlert('Network error. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Create Account';
+  }
+}
+
+// ── Auto-switch tab if URL has ?tab=register ──
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('tab') === 'register') switchTab('register');
+
+// ── Dark / Light Theme (match index behavior) ──
+function applyTheme(isDark) {
+  document.body.classList.toggle('dark', isDark);
+  const fab = document.getElementById('themeFab');
+  if (fab) fab.textContent = isDark ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const isDark = !document.body.classList.contains('dark');
+  localStorage.setItem('chittiTheme', isDark ? 'dark' : 'light');
+  applyTheme(isDark);
+}
+
+// Apply saved preference on load (no flash)
+(function() {
+  const saved = localStorage.getItem('chittiTheme');
+  applyTheme(saved === 'dark');
+})();
+</script>
+</body>
+</html>

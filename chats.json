@@ -1,50 +1,14 @@
 {
-    "ba2169f8-d07c-424f-a708-6e0273679a8e": [
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "assistant",
-            "content": "How can I assist you today?"
-        },
-        {
-            "role": "user",
-            "content": "i want to eat somethig"
-        },
-        {
-            "role": "assistant",
-            "content": "That sounds like a great idea. What kind of food are you in the mood for? Do you have any cravings or preferences (e.g. vegetarian, sweet, spicy, etc.)?"
-        }
-    ],
-    "8948833a-8967-4c5e-92b7-b8aef68ba5ec": [
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "assistant",
-            "content": "How can I assist you today?"
-        }
-    ],
-    "0d98673c-d724-46b0-832c-53b29d4eaa8c": [
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "assistant",
-            "content": "How can I assist you today?"
-        }
-    ],
-    "350b5904-fcdb-45dd-83a0-a157c8b1feb8": [
-        {
-            "role": "user",
-            "content": "hi"
-        },
-        {
-            "role": "assistant",
-            "content": "How can I assist you today?"
-        }
-    ]
+    "bhargav": {
+        "11b9853a-ac48-48bb-abd3-19746f999792": [
+            {
+                "role": "user",
+                "content": "hi"
+            },
+            {
+                "role": "assistant",
+                "content": "How can I assist you today?"
+            }
+        ]
+    }
 }
